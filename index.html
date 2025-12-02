@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8" />
@@ -61,7 +62,7 @@
             width: 100%;
             height: 100%;
             object-fit: contain; /* Agar gambar tidak terpotong */
-            padding: 10px; /* Jarak agar gambar terlihat lebih jelas */
+            padding: 5px; /* Sedikit padding agar tidak mepet */
             box-sizing: border-box;
         }
 
@@ -104,16 +105,16 @@
 
 <script>
     // === Konfigurasi hadiah ===
-    // Pastikan 5 file gambar ini sudah diunggah ke folder yang sama dengan file HTML!
+    // NAMA FILE SUDAH DIBUAT SEDERHANA. ANDA HARUS MENGGANTI NAMA FILE ANDA DI GITHUB!
     const rewardImages = [
-        "x 299 - 3.jpg", // Hadiah 1: Berlian/Gems
-        "x 299 - 2.jpg", // Hadiah 2: Gold Badge
-        "x 299 - 4.jpg", // Hadiah 3: Crate/Box
-        "x 299 - 5.jpg", // Hadiah 4: Hexagonal Gem
-        "x 299 - 6.jpg"  // Hadiah 5: Mask/Head
+        "ff_item_1.jpg", // Hadiah 1: Berlian/Gems
+        "ff_item_2.jpg", // Hadiah 2: Gold Badge
+        "ff_item_3.jpg", // Hadiah 3: Crate/Box
+        "ff_item_4.jpg", // Hadiah 4: Hexagonal Gem
+        "ff_item_5.jpg"  // Hadiah 5: Mask/Head
     ];
 
-    // Nama/Deskripsi Hadiah (Sesuaikan dengan gambar)
+    // Nama/Deskripsi Hadiah
     const rewardNames = [
         "999 DIAMONDS!",
         "ELITE PASS BADGE!",
@@ -129,7 +130,7 @@
     const result = document.getElementById("result");
     const spinBtn = document.getElementById("spinBtn");
 
-    // Warna latar belakang untuk setiap slice (opsional, untuk memperindah)
+    // Warna latar belakang untuk setiap slice
     const colors = ["#b30000", "#cc6600", "#0066cc", "#6600cc", "#00cc66"];
 
     // Generate slice
@@ -137,10 +138,10 @@
         const slice = document.createElement("div");
         slice.className = "slice";
         slice.style.transform = `rotate(${degreePerSlice * i}deg)`;
-        slice.style.backgroundColor = colors[i % colors.length]; // Menggunakan warna latar
+        slice.style.backgroundColor = colors[i % colors.length];
         
         // Memasukkan gambar dan memutar balik gambar agar tegak lurus
-        slice.innerHTML = `<img src="${rewardImages[i]}" style="width:100%;height:100%;transform:rotate(${-degreePerSlice * i}deg);"/>`;
+        slice.innerHTML = `<img src="${rewardImages[i]}" alt="${rewardNames[i]}" style="width:100%;height:100%;transform:rotate(${-degreePerSlice * i}deg);"/>`;
         wheel.appendChild(slice);
     }
 
@@ -176,7 +177,7 @@
                 spinning = false;
                 spinBtn.disabled = false;
                 result.innerHTML = `🎉 **SELAMAT!** Anda mendapatkan: **${rewardNames[winningIndex]}**!`;
-            }, 4200); // Selesai setelah 4.2 detik (sedikit lebih lama dari transisi CSS)
+            }, 4200); // Selesai setelah 4.2 detik
         }, 100);
     };
 </script>
