@@ -1,0 +1,184 @@
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Free Fire Spin Wheel</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0d0d0d; /* Latar belakang gelap */
+            font-family: Arial, sans-serif;
+            text-align: center;
+            color: #fff;
+        }
+
+        h1 {
+            margin-top: 20px;
+            font-size: 26px;
+            letter-spacing: 3px;
+            color: #ffcc00; /* Warna emas untuk judul */
+        }
+
+        #wheel {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 8px solid #ffcc00; /* Border emas */
+            margin: 30px auto;
+            position: relative;
+            overflow: hidden;
+            /* Transisi untuk animasi putar */
+            transition: transform 4s cubic-bezier(0.1, 0.1, 0.05, 1); 
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.5); /* Efek cahaya emas */
+        }
+
+        /* Tanda panah (indikator) di atas roda */
+        #indicator {
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 25px solid #ff0000; /* Warna merah */
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        .slice {
+            width: 50%;
+            height: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: 0% 0%;
+        }
+
+        /* Styling gambar di dalam slice agar menutupi area dengan baik */
+        .slice img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Agar gambar tidak terpotong */
+            padding: 10px; /* Jarak agar gambar terlihat lebih jelas */
+            box-sizing: border-box;
+        }
+
+        #spinBtn {
+            padding: 14px 30px;
+            background: #ff0000; /* Tombol Spin Merah */
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.5);
+        }
+
+        #spinBtn:disabled {
+            background: #550000;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #39ff14; /* Warna hijau neon */
+        }
+    </style>
+</head>
+<body>
+    <div id="indicator"></div>
+    <h1>FREE FIRE SPIN WHEEL</h1>
+
+    <div id="wheel"></div>
+
+    <button id="spinBtn">SPIN NOW</button>
+
+    <div id="result"></div>
+
+<script>
+    // === Konfigurasi hadiah ===
+    // Pastikan 5 file gambar ini sudah diunggah ke folder yang sama dengan file HTML!
+    const rewardImages = [
+        "x 299 - 3.jpg", // Hadiah 1: Berlian/Gems
+        "x 299 - 2.jpg", // Hadiah 2: Gold Badge
+        "x 299 - 4.jpg", // Hadiah 3: Crate/Box
+        "x 299 - 5.jpg", // Hadiah 4: Hexagonal Gem
+        "x 299 - 6.jpg"  // Hadiah 5: Mask/Head
+    ];
+
+    // Nama/Deskripsi Hadiah (Sesuaikan dengan gambar)
+    const rewardNames = [
+        "999 DIAMONDS!",
+        "ELITE PASS BADGE!",
+        "LEGENDARY CRATE!",
+        "RARE GEM FRAGMENT!",
+        "MYTHIC MASK SKIN!"
+    ];
+
+    const numRewards = rewardImages.length;
+    const degreePerSlice = 360 / numRewards;
+
+    const wheel = document.getElementById("wheel");
+    const result = document.getElementById("result");
+    const spinBtn = document.getElementById("spinBtn");
+
+    // Warna latar belakang untuk setiap slice (opsional, untuk memperindah)
+    const colors = ["#b30000", "#cc6600", "#0066cc", "#6600cc", "#00cc66"];
+
+    // Generate slice
+    for (let i = 0; i < numRewards; i++) {
+        const slice = document.createElement("div");
+        slice.className = "slice";
+        slice.style.transform = `rotate(${degreePerSlice * i}deg)`;
+        slice.style.backgroundColor = colors[i % colors.length]; // Menggunakan warna latar
+        
+        // Memasukkan gambar dan memutar balik gambar agar tegak lurus
+        slice.innerHTML = `<img src="${rewardImages[i]}" style="width:100%;height:100%;transform:rotate(${-degreePerSlice * i}deg);"/>`;
+        wheel.appendChild(slice);
+    }
+
+    let spinning = false;
+
+    spinBtn.onclick = () => {
+        if (spinning) return;
+        spinning = true;
+        spinBtn.disabled = true;
+        result.innerText = "Berputar...";
+        
+        // Reset rotasi
+        wheel.style.transition = 'none';
+        wheel.style.transform = 'rotate(0deg)';
+
+        // Delay sebelum spin dimulai
+        setTimeout(() => {
+            wheel.style.transition = 'transform 4s cubic-bezier(0.1, 0.1, 0.05, 1)';
+            
+            // Pilih hadiah secara acak (0 sampai 4)
+            const winningIndex = Math.floor(Math.random() * numRewards); 
+            
+            // Hitung sudut yang dibutuhkan agar hadiah berada di bawah indikator
+            const stopDegree = 360 - (winningIndex * degreePerSlice) - (degreePerSlice / 2);
+            
+            // Tambahkan putaran ekstra (misalnya 5 putaran penuh)
+            const fullSpins = 5 * 360; 
+            const finalRotation = fullSpins + stopDegree;
+            
+            wheel.style.transform = `rotate(${finalRotation}deg)`;
+
+            setTimeout(() => {
+                spinning = false;
+                spinBtn.disabled = false;
+                result.innerHTML = `🎉 **SELAMAT!** Anda mendapatkan: **${rewardNames[winningIndex]}**!`;
+            }, 4200); // Selesai setelah 4.2 detik (sedikit lebih lama dari transisi CSS)
+        }, 100);
+    };
+</script>
+</body>
+</html>
